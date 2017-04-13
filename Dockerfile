@@ -1,9 +1,15 @@
-FROM openjdk:8-jdk
+FROM openjdk:8-jre-alpine
 MAINTAINER Nicholas Iaquinto <nickiaq@gmail.com>
 
 # Gradle
 ENV GRADLE_VERSION 3.3
 ENV GRADLE_SHA c58650c278d8cf0696cab65108ae3c8d95eea9c1938e0eb8b997095d5ca9a292
+
+# Setup basic tooling
+RUN apk update && apk add --no-cache curl unzip
+
+# Add the lib below to solve "Failed to load native library 'libnative-platform.so' for Linux amd64." (Related to Alpine image)
+RUN apk add libstdc++ && rm -rf /var/cache/apk/*
 
 RUN cd /usr/lib \
  && curl -fl https://downloads.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -o gradle-bin.zip \
